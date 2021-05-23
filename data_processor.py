@@ -2,7 +2,7 @@ import csv
 
 processed_info = []
 
-with open("data_prep_test_sheet.csv") as csv_file:
+with open("unformatted_sister_info.csv") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=",")
     line_count = 0
 
