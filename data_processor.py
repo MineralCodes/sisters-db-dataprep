@@ -2,7 +2,7 @@ import csv
 
 processed_info = []
 
-with open("data_prep_test_sheet.csv") as csv_file:
+with open("unformatted_sister_info.csv") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=",")
     line_count = 0
 
@@ -31,14 +31,21 @@ with open("data_prep_test_sheet.csv") as csv_file:
                     elif idx == 3:
                         sister_info["religious_name"] = row[idx]
                     elif idx >= 4 and idx <= 19:
-                        sister_info["occupations"] += f"{row[idx]} \n"
+                        if len(row[idx + 1]) > 1:
+                            sister_info["occupations"] += f"{row[idx]} \n"
+                        else:
+                            sister_info["occupations"] += f"{row[idx]}"
                     elif idx >= 20:
                         location = ""
                         if row[idx].count(",") > 1:
                             location = row[idx].replace(",", " in", 1)
                         else:
                             location = row[idx]
-                        sister_info["locations"] += f"{location} \n"
+
+                        if idx + 1 < len(row) - 1 and len(row[idx + 1]) > 1:
+                            sister_info["locations"] += f"{location} \n"
+                        else:
+                            sister_info["locations"] += f"{location}"
                 idx += 1
 
             sister_copy = sister_info.copy()
