@@ -2,7 +2,7 @@ import csv
 
 processed_info = []
 
-with open("unformatted_sister_info.csv") as csv_file:
+with open("unformatted_sister_info-dash-fixed.csv", encoding="utf-8") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=",")
     line_count = 0
 
@@ -16,36 +16,39 @@ with open("unformatted_sister_info.csv") as csv_file:
                 "baptism_name": "",
                 "religious_name": "",
                 "occupations": "",
-                "locations": ""
+                "locations": "",
+                "fee_id": 2
             }
             idx = 0
 
             while idx < len(row):
-                if len(row[idx]) > 1:
+                stripped = row[idx].strip()
+                if len(stripped) > 1:
                     if idx == 0:
-                        sister_info["common_name"] = row[idx]
+                        common_name =  row[0].strip()
+                        sister_info["common_name"] = common_name
                     elif idx == 1:
-                        sister_info["last_name"] = row[idx]
+                        last_name = row[0].split(" ")
+                        ln_strp = last_name[-1].strip()
+                        sister_info["last_name"] = ln_strp
                     elif idx == 2:
-                        sister_info["baptism_name"] = row[idx]
+                        baptism_name = row[idx].strip()
+                        sister_info["baptism_name"] = baptism_name
                     elif idx == 3:
-                        sister_info["religious_name"] = row[idx]
+                        religious_name = row[idx].strip()
+                        sister_info["religious_name"] = religious_name
                     elif idx >= 4 and idx <= 19:
-                        if len(row[idx + 1]) > 1:
-                            sister_info["occupations"] += f"{row[idx]} \n"
-                        else:
-                            sister_info["occupations"] += f"{row[idx]}"
+                        occupation = row[idx].strip()
+                        sister_info["occupations"] += f"{occupation},"
                     elif idx >= 20:
                         location = ""
                         if row[idx].count(",") > 1:
-                            location = row[idx].replace(",", " in", 1)
+                            loc_strp = row[idx].strip()
+                            location = loc_strp.replace(",", " in", 1)
                         else:
-                            location = row[idx]
+                            location = row[idx].strip()
 
-                        if idx + 1 < len(row) - 1 and len(row[idx + 1]) > 1:
-                            sister_info["locations"] += f"{location} \n"
-                        else:
-                            sister_info["locations"] += f"{location}"
+                        sister_info["locations"] += f"{location};"
                 idx += 1
 
             sister_copy = sister_info.copy()
@@ -53,7 +56,7 @@ with open("unformatted_sister_info.csv") as csv_file:
             line_count += 1
 
 with open("processed_sister_info.csv", mode="w", newline='', encoding="utf-8") as csv_file:
-    fieldnames = ["common_name", "last_name", "baptism_name", "religious_name", "occupations", "locations"]
+    fieldnames = ["common_name", "last_name", "baptism_name", "religious_name", "occupations", "locations", "fee_id"]
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
 
     writer.writeheader()
